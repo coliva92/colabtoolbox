@@ -21,5 +21,5 @@ def zip_and_download_folder(folder: str):
   import os
   from google.colab import files
   zip_filename = f'{folder}.zip'
-  os.system(f'shell zip -q -r {zip_filename} {folder}')
+  os.system(f'zip -q -r {zip_filename} {folder}')
   files.download(zip_filename)
