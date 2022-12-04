@@ -79,3 +79,15 @@ def save_locally_from_google_drive(drive: GoogleDrive,
                                    filename: str):
   file = drive.CreateFile({ 'id': fileId })
   file.GetContentFile(filename)
+
+
+
+# Updates the contents of the file with the especified ID with the contents
+# of the local file with the especified filename.
+def update_in_google_drive(drive: GoogleDrive, 
+                           fileId: str,
+                           filename: str):
+  file = drive.CreateFile({ 'id': fileId })
+  file.SetContentFile(filename)
+  file.Upload()
+  
