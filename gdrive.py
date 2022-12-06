@@ -35,7 +35,7 @@ def upload_to_google_drive(drive: GoogleDrive,
                            filename: str,
                            parentId: Optional[str] = None) -> str:
   metadata = { 'title': filename }
-  if folderId is not None:
+  if parentId is not None:
     metadata['parents'] = [{ 
       'id': parentId,
       'kind': 'drive#fileLink'
