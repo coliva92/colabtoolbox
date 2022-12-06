@@ -32,8 +32,15 @@ def sign_in_to_google_drive() -> Optional[GoogleDrive]:
 # - https://developers.google.com/drive/api/v3/reference#Files
 # - https://developers.google.com/drive/api/v3/reference/files#resource
 def save_to_google_drive(drive: GoogleDrive, 
-                         filename: str) -> str:
-  uploaded = drive.CreateFile({ 'title': filename })
+                         filename: str,
+                         folderId: Optional[str] = None) -> str:
+  config = { 'title': filename }
+  if folderId is not None:
+    config['parents'] = [{ 
+      'id': folderId,
+      'kind': 'drive#fileLink'
+    }]
+  uploaded = drive.CreateFile(config)
   uploaded.SetContentFile(filename)
   uploaded.Upload()
   return uploaded.get('id')
@@ -51,7 +58,7 @@ def save_to_google_drive(drive: GoogleDrive,
 # - https://developers.google.com/drive/api/v3/reference/files#resource
 def find_id_from_google_drive(drive: GoogleDrive, 
                               name: str) -> Optional[str]:
-  query = { 'q': f"name='{name}' and trashed=false" }
+  query = { 'q': f"title='{name}' and trashed=false" }
   file_list = drive.ListFile(query).GetList()
   return file_list[0]['id'] if len(file_list) > 0 else None 
 
