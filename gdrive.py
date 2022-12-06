@@ -32,46 +32,18 @@ def sign_in_to_google_drive() -> Optional[GoogleDrive]:
 # - https://developers.google.com/drive/api/v3/reference#Files
 # - https://developers.google.com/drive/api/v3/reference/files#resource
 def upload_to_google_drive(drive: GoogleDrive, 
-                         filename: str,
-                         folderId: Optional[str] = None) -> str:
-  config = { 'title': filename }
+                           filename: str,
+                           parentId: Optional[str] = None) -> str:
+  metadata = { 'title': filename }
   if folderId is not None:
     config['parents'] = [{ 
-      'id': folderId,
+      'id': parentId,
       'kind': 'drive#fileLink'
     }]
-  uploaded = drive.CreateFile(config)
-  uploaded.SetContentFile(filename)
-  uploaded.Upload()
-  return uploaded.get('id')
-
-
-
-# Queries the Google Drive API in search of a file with the specified name.
-# Returns the ID of the first search result or `None` if the query returned 
-# no results.
-#
-# See:
-# - https://pythonhosted.org/PyDrive/filelist.html#get-all-files-which-matches-the-query
-# - https://developers.google.com/drive/api/v3/reference/files/list
-# - https://developers.google.com/drive/api/guides/ref-search-terms
-# - https://developers.google.com/drive/api/v3/reference/files#resource
-def find_id_from_google_drive(drive: GoogleDrive, 
-                              name: str) -> Optional[str]:
-  query = { 'q': f"title='{name}' and trashed=false" }
-  file_list = drive.ListFile(query).GetList()
-  return file_list[0]['id'] if len(file_list) > 0 else None 
-
-
-
-# Returns a string that describes the contents of the file with the especified ID,
-# obtained from Google Drive.
-#
-# See: https://pythonhosted.org/PyDrive/filemanagement.html#download-file-content
-def get_contents_from_google_drive(drive: GoogleDrive,
-                                   fileId: str) -> str:
-  file = drive.CreateFile({ 'id': fileId })
-  return file.GetContentString()
+  file = drive.CreateFile(metadata)
+  file.SetContentFile(filename)
+  file.Upload()
+  return file.get('id')
 
 
 
@@ -82,8 +54,8 @@ def get_contents_from_google_drive(drive: GoogleDrive,
 #
 # See: https://pythonhosted.org/PyDrive/filemanagement.html#download-file-content
 def download_from_google_drive(drive: GoogleDrive,
-                                   fileId: str,
-                                   filename: str):
+                               fileId: str,
+                               filename: str):
   file = drive.CreateFile({ 'id': fileId })
   file.GetContentFile(filename)
 
@@ -91,10 +63,25 @@ def download_from_google_drive(drive: GoogleDrive,
 
 # Updates the contents of the file with the especified ID with the contents
 # of the local file with the especified filename.
-def update_to_google_drive(drive: GoogleDrive, 
+def update_in_google_drive(drive: GoogleDrive, 
                            fileId: str,
                            filename: str):
   file = drive.CreateFile({ 'id': fileId })
   file.SetContentFile(filename)
   file.Upload()
-  
+
+
+
+# Creates a new folder in Google Drive with the especified name.
+# Returns the assigned ID of the created folder. 
+def create_folder_in_google_drive(drive: GoogleDrive, 
+                                  name: str, 
+                                  parentId: Optional[str] = None) -> str:
+  metadata = {
+    'name': name,
+    'mimeType': 'application/vnd.google-apps.folder'
+  }
+  if parentId is not None: metadata['parents'] = [ parentId ]
+  folder = drive.CreateFile(metadata)
+  folder.Upload()
+  return folder.get('id')
