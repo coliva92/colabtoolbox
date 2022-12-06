@@ -31,7 +31,7 @@ def sign_in_to_google_drive() -> Optional[GoogleDrive]:
 # - https://pythonhosted.org/PyDrive/filemanagement.html#upload-and-update-file-content
 # - https://developers.google.com/drive/api/v3/reference#Files
 # - https://developers.google.com/drive/api/v3/reference/files#resource
-def save_to_google_drive(drive: GoogleDrive, 
+def upload_to_google_drive(drive: GoogleDrive, 
                          filename: str,
                          folderId: Optional[str] = None) -> str:
   config = { 'title': filename }
@@ -81,7 +81,7 @@ def get_contents_from_google_drive(drive: GoogleDrive,
 # filename.
 #
 # See: https://pythonhosted.org/PyDrive/filemanagement.html#download-file-content
-def save_locally_from_google_drive(drive: GoogleDrive,
+def download_from_google_drive(drive: GoogleDrive,
                                    fileId: str,
                                    filename: str):
   file = drive.CreateFile({ 'id': fileId })
@@ -91,7 +91,7 @@ def save_locally_from_google_drive(drive: GoogleDrive,
 
 # Updates the contents of the file with the especified ID with the contents
 # of the local file with the especified filename.
-def update_in_google_drive(drive: GoogleDrive, 
+def update_to_google_drive(drive: GoogleDrive, 
                            fileId: str,
                            filename: str):
   file = drive.CreateFile({ 'id': fileId })
