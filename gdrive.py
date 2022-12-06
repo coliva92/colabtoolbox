@@ -36,7 +36,7 @@ def upload_to_google_drive(drive: GoogleDrive,
                            parentId: Optional[str] = None) -> str:
   metadata = { 'title': filename }
   if folderId is not None:
-    config['parents'] = [{ 
+    metadata['parents'] = [{ 
       'id': parentId,
       'kind': 'drive#fileLink'
     }]
@@ -81,7 +81,11 @@ def create_folder_in_google_drive(drive: GoogleDrive,
     'title': name,
     'mimeType': 'application/vnd.google-apps.folder'
   }
-  if parentId is not None: metadata['parents'] = [ parentId ]
+  if parentId is not None:
+    metadata['parents'] = [{ 
+      'id': parentId,
+      'kind': 'drive#fileLink'
+    }]
   folder = drive.CreateFile(metadata)
   folder.Upload()
   return folder.get('id')
