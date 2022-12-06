@@ -78,7 +78,7 @@ def create_folder_in_google_drive(drive: GoogleDrive,
                                   name: str, 
                                   parentId: Optional[str] = None) -> str:
   metadata = {
-    'name': name,
+    'title': name,
     'mimeType': 'application/vnd.google-apps.folder'
   }
   if parentId is not None: metadata['parents'] = [ parentId ]
