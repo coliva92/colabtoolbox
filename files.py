@@ -4,7 +4,7 @@
 def zip_and_download_folder(folder: str) -> str:
   import os
   from google.colab import files
-  zip_filename = f'{folder}.zip'
-  os.system(f'zip -q -r {zip_filename} {folder}')
-  files.download(zip_filename)
-  return zip_filename
+  zip_folder = f'{folder}.zip'
+  os.system(f'zip -q -r {zip_folder} {folder}')
+  files.download(zip_folder)
+  return zip_folder
